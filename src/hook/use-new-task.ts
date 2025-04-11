@@ -35,3 +35,12 @@ export async function addTodo(title: string): Promise<Todo> {
   }
   return await res.json();
 }
+
+export async function deleteTodo(id: number): Promise<void> {
+  const res = await fetch(`http://localhost:3000/todos/${id}`, {
+    method: 'DELETE',
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to delete task with id ${id}`);
+  }
+}

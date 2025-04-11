@@ -5,7 +5,7 @@ import { TableTodo } from '@/components/molecules/table-todo';
 import { Button } from '@/components/ui/button';
 import { Heading } from '@/components/ui/heading';
 import { Input } from '@/components/ui/input';
-import { addTodo, getTodos, Todo } from '@/hook/use-new-task';
+import { addTodo, deleteTodo, getTodos, Todo } from '@/hook/use-new-task';
 import { Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
@@ -33,6 +33,15 @@ export function Home() {
       console.error(error);
     }
   };
+  const handleDeleteTask = async (id: number) => {
+    try {
+      await deleteTodo(id);
+      setTodos((prev) => prev.filter((todo) => todo.id !== id));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="container mx-auto px-5 max-w-5xl">
       <Heading className="py-5">TODO LIST</Heading>
@@ -55,7 +64,7 @@ export function Home() {
           </form>
         </div>
       </div>
-      <TableTodo todos={todos} />
+      <TableTodo todos={todos} onDelete={handleDeleteTask} />
       <MyPagination />
     </div>
   );
