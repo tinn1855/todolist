@@ -1,4 +1,4 @@
-import { Checkbox } from '@/components/ui/checkbox';
+// components/molecules/TableTodo.tsx
 import {
   Table,
   TableBody,
@@ -7,26 +7,16 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { SelectStatus } from '../select-status';
-import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
-import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Todo } from '@/hook/use-new-task';
 
-export function TableTodo() {
-  type todo = {
-    id: number;
-    title: string;
-    status: string;
-    priority: string;
-  };
-  const [todos, setTodos] = useState<todo[]>([]);
+interface TableTodoProps {
+  todos: Todo[];
+}
 
-  useEffect(() => {
-    fetch('http://localhost:3001/todos')
-      .then((res) => res.json())
-      .then((data) => setTodos(data))
-      .catch((err) => console.log('Error fetching:', err));
-  });
+export function TableTodo({ todos }: TableTodoProps) {
   return (
     <Table>
       <TableHeader>
@@ -40,16 +30,30 @@ export function TableTodo() {
       </TableHeader>
       <TableBody>
         {todos.map((todo) => (
-          <TableRow>
-            <TableCell className="font-medium">
+          <TableRow key={todo.id}>
+            <TableCell>
               <Checkbox />
             </TableCell>
             <TableCell>{todo.title}</TableCell>
             <TableCell>
-              <SelectStatus />
+              <Badge
+                variant={todo.status === 'completed' ? 'default' : 'secondary'}
+              >
+                {todo.status}
+              </Badge>
             </TableCell>
             <TableCell>
-              <Badge variant="destructive">{todo.priority}</Badge>
+              <Badge
+                variant={
+                  todo.priority === 'high'
+                    ? 'destructive'
+                    : todo.priority === 'medium'
+                    ? 'outline'
+                    : 'secondary'
+                }
+              >
+                {todo.priority}
+              </Badge>
             </TableCell>
             <TableCell className="flex gap-2">
               <Button variant="outline">Edit</Button>

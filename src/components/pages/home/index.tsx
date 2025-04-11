@@ -1,19 +1,42 @@
+import { AddTask } from '@/components/future/add-task';
 import { MyPagination } from '@/components/molecules/pagination';
 import { SelectStatus } from '@/components/molecules/select-status';
 import { TableTodo } from '@/components/molecules/table-todo';
 import { Button } from '@/components/ui/button';
 import { Heading } from '@/components/ui/heading';
 import { Input } from '@/components/ui/input';
+import { addTodo, getTodos, Todo } from '@/hook/use-new-task';
 import { Search } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 export function Home() {
+  const [todos, setTodos] = useState<Todo[]>([]);
+
+  useEffect(() => {
+    fetchTodos();
+  }, []);
+
+  const fetchTodos = async () => {
+    try {
+      const data = await getTodos();
+      setTodos(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleAddTask = async (title: string) => {
+    try {
+      const newTodo = await addTodo(title);
+      setTodos((prev) => [...prev, newTodo]);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <div className="container mx-auto px-5 max-w-5xl">
       <Heading className="py-5">TODO LIST</Heading>
-      <form action="" className="flex gap-2">
-        <Input type="text" placeholder="Add your text" className="w-5/6" />
-        <Button className="w-1/6">Add</Button>
-      </form>
+      <AddTask onAdd={handleAddTask} />
       <div className="py-5 flex justify-between items-center">
         <div className="flex gap-2">
           <Button variant="outline">Select All</Button>
@@ -32,7 +55,7 @@ export function Home() {
           </form>
         </div>
       </div>
-      <TableTodo />
+      <TableTodo todos={todos} />
       <MyPagination />
     </div>
   );
