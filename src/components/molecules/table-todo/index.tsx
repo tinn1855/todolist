@@ -37,7 +37,9 @@ export function TableTodo({ todos }: TableTodoProps) {
             <TableCell>{todo.title}</TableCell>
             <TableCell>
               <Badge
-                variant={todo.status === 'completed' ? 'default' : 'secondary'}
+                variant={
+                  todo.status === 'completed' ? 'default' : 'destructive'
+                }
               >
                 {todo.status}
               </Badge>
@@ -49,7 +51,7 @@ export function TableTodo({ todos }: TableTodoProps) {
                     ? 'destructive'
                     : todo.priority === 'medium'
                     ? 'outline'
-                    : 'secondary'
+                    : 'default'
                 }
               >
                 {todo.priority}
